@@ -8,7 +8,11 @@ author: Alexander Goussas
 
 ## Whoami
 
-TODO
+- Desarrollador de software senior en Thoughtworks
+- Actualmente trabajando en una solución de shopping para una aerolínea
+- Más experiencia con Java+Spring Boot
+- Interés en programación funcional, compiladores, arquitectura y calidad de
+  software
 
 ---
 
@@ -24,14 +28,18 @@ independiente de la implementación
 
 * https://en.wikipedia.org/wiki/Domain_model
 
-## Ejemplos de dominios
+---
+
+### Ejemplos de dominios
 
 - Una solución de shopping en línea
 - Sistema de lealtad
 - Banca
 - etc
 
-## Subdominios
+---
+
+### Subdominios
 
 - Carrito
 - Checkout
@@ -49,6 +57,8 @@ para un dominio particular.
 El objetivo es expresar un problema o solución de una forma más clara de lo que
 un lenguaje existente lo permitiría.
 
+---
+
 Algunos ejemplos son:
 
 - SQL
@@ -57,6 +67,8 @@ Algunos ejemplos son:
 - Yacc
 - Gherkin
 - Gradle
+
+---
 
 ### DSLs embebidos (eDSL)
 
@@ -72,10 +84,10 @@ Algunos ejemplos son:
 > To interpret a typed object language in a typed metalanguage without tagging
 or type system extensions
 
-Interpretar un lenguaje tipado en un metalenguaje tipado sin etiquetas o
-extensiones.
+Tagless Final es un patrón de diseño que tiene por objetivo interpretar un
+lenguaje tipado en un metalenguaje tipado sin etiquetas o extensiones.
 
-* https://okmij.org/ftp/tagless-final/index.html
+* Descrito en el paper https://okmij.org/ftp/tagless-final/index.html
 
 ---
 
@@ -161,3 +173,129 @@ main = do
 
 ## Ejemplo más práctico
 
+```java
+public record Vitrine(
+        String id,
+        String name,
+        List<VItem> items
+) {
+    public record VItem(
+            String id,
+            String name,
+            BigDecimal price
+    ) {
+    }
+}
+```
+
+---
+
+# Digresión
+
+## Patrón newtype 
+
+- Valerse del sistema de tipos para garantizar correctitud
+- Los records aún no soportan constructores primarios privados
+- Proyecto Valhalla haría de esto una _zero-cost abstraction_
+
+```java
+public record VitrineId(String id) {
+}
+```
+
+```java
+public record Vitrine(
+        VitrineId id,
+        String name,
+        List<VItem> items
+) {
+    public record VItem(
+            String id,
+            String name,
+            BigDecimal price
+    ) {
+    }
+}
+```
+
+---
+
+## Nuestra sintaxis
+
+```java
+public interface VitrineSymantics {
+
+    List<Vitrine> homeVitrines();
+
+    List<Vitrine> vitrines();
+
+}
+```
+
+---
+
+## Diferentes semánticas
+
+---
+
+```java
+public class VendorVitrines implements VitrineSymantics {
+    private final HttpClient client;
+
+    public VendorVitrines(HttpClient client) {
+        this.client = client;
+    }
+
+    @Override
+    public List<Vitrine> homeVitrines() {
+        // .....
+        return List.of();
+    }
+
+    @Override
+    public List<Vitrine> vitrines() {
+        // ....
+        return List.of();
+    }
+}
+```
+
+---
+
+```java
+public class InMemoryVitrines implements VitrineSymantics {
+    private final ConcurrentHashMap<VitrineId, Vitrine> vitrines = new ConcurrentHashMap<>();
+    
+    @Override
+    public List<Vitrine> homeVitrines() {
+        return List.of();
+    }
+
+    @Override
+    public List<Vitrine> vitrines() {
+        return List.of();
+    }
+}
+```
+
+---
+
+## Otros motivos para trabajar de esta forma
+
+- Evitar el vendor lock-in
+
+---
+
+## Palabras finales
+
+_Así como contemplamos una obra de arte, nos maravillamos ante la magnificencia
+de un edificio y nos sobrecogemos al ver una actuación fantástica, el software
+también puede ser hermoso._
+
+---
+
+## Descarga el deck en formato markdown
+
+```bash
+chafa --scale max ~/Developer/software-freedom-day-2026/assets/code.png
+```
