@@ -32,10 +32,11 @@ independiente de la implementación
 
 ### Ejemplos de dominios
 
-- Una solución de shopping en línea
-- Sistema de lealtad
+- eCommerce
+- Sistemas de lealtad
 - Banca
-- etc
+- Booking de hoteles
+- Soporte a usuarios
 
 ---
 
@@ -164,7 +165,7 @@ main = do
   seguridad de tipos.
 - La sintaxis de nuestro lenguaje está dada por su interfaz y la semántica por
   las implementaciones concretas.
-- Solo con leer la definición de la interfaz, el lector sabe cuál es el
+- Solo con leer la definición de la interfaz sabemos sabe cuál es el
   propósito del programa.
 - Las implementaciones son intercambiables (principio de sustitución Liskov y
   principio de inversión de dependencias).
@@ -189,8 +190,6 @@ public record Vitrine(
 ```
 
 ---
-
-# Digresión
 
 ## Patrón newtype 
 
@@ -280,9 +279,11 @@ public class InMemoryVitrines implements VitrineSymantics {
 
 ---
 
-## Otros motivos para trabajar de esta forma
+## Ventajas de desarrollar software de esta forma
 
 - Evitar el vendor lock-in
+- Facilita los tests unitarios
+- Permite a diferentes equipos trabajar de forma independiente
 
 ---
 
@@ -294,7 +295,7 @@ también puede ser hermoso._
 
 ---
 
-## Descarga el deck en formato markdown
+## Accede al código de ejemplo y presentación
 
 ```bash
 chafa --scale max ~/Developer/software-freedom-day-2026/assets/code.png
